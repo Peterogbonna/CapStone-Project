@@ -1,38 +1,58 @@
-function WeatherCard({ data }) {
-    if (!data || !data.main || !data.weather || !data.wind) {
-        return (
-            <div className="bg-white p-4 rounded-xl shadow text-center text-gray-500">
-                No weather data available
-            </div>
-        );
-    }
+import { WiDaySunny, WiRain, WiCloud, WiThunderstorm, WiSnow, WiFog } from "react-icons/wi";
 
-    const { name, main, weather, wind } = data;
+export default function WeatherCard({ data }) {
+  const weatherDescription = data.weather[0].description;
+  const mainWeather = data.weather[0].main;
+  const cityName = data.name;
+  const temperature = Math.round(data.main.temp);
 
-    return (
-        <div className="bg-white p-4 rounded-xl shadow text-center">
-            <h2 className="text-xl font-semibold">{name}</h2>
+  // Determine icon and message
+  let IconComponent;
+  let weatherMessage = "";
 
-            <div className="flex justify-center items-center my-4">
-                <img
-                  src={`https://openweathermap.org/img/wn/${weather[0].icon}@2x.png`}
-                  alt={weather[0].description}
-                  className="w-16 h-16"
-                />
-                <p className="text-3xl font-bold ml-2">{Math.round(main.temp)}°C</p>
-            </div>
+  switch (mainWeather.toLowerCase()) {
+    case "rain":
+      IconComponent = WiRain;
+      weatherMessage = `It might rain today in ${cityName} ☔`;
+      break;
+    case "clouds":
+      IconComponent = WiCloud;
+      weatherMessage = `It's cloudy in ${cityName} ☁️`;
+      break;
+    case "clear":
+      IconComponent = WiDaySunny;
+      weatherMessage = `It's sunny today in ${cityName} 🌞`;
+      break;
+    case "thunderstorm":
+      IconComponent = WiThunderstorm;
+      weatherMessage = `There’s a thunderstorm in ${cityName} ⚡`;
+      break;
+    case "snow":
+      IconComponent = WiSnow;
+      weatherMessage = `Snowfall expected in ${cityName} ❄️`;
+      break;
+    case "fog":
+    case "mist":
+      IconComponent = WiFog;
+      weatherMessage = `It’s foggy in ${cityName} 🌫️`;
+      break;
+    default:
+      IconComponent = WiDaySunny;
+      weatherMessage = `The weather looks ${weatherDescription} in ${cityName}`;
+  }
 
-            <p className="capitalize text-gray-600">{weather[0].description}</p>
-
-            <div className="mt-4 space-y-2">
-                <p className="bg-sky-50 p-2 rounded">Humidity: {main.humidity}%</p>
-                <p className="bg-sky-50 p-2 rounded">Wind: {wind.speed} km/h</p>
-                <p className="bg-sky-50 p-2 rounded">
-                    Feels Like: {Math.round(main.feels_like)}°C
-                </p>
-            </div>
-        </div>
-    );
+  return (
+    <div className="bg-white/30 rounded-xl p-4 text-center text-gray-900">
+      <h2 className="text-xl font-semibold mb-2">{cityName}</h2>
+      <div className="flex justify-center items-center mb-3">
+        <IconComponent className="text-6xl text-blue-600" />
+      </div>
+      <p className="text-4xl font-bold mb-2">{temperature}°C</p>
+      <p className="capitalize text-lg mb-1">{weatherDescription}</p>
+      <p className="text-sm text-gray-700 mb-2">
+        Humidity: {data.main.humidity}% | Wind: {data.wind.speed} m/s
+      </p>
+      <p className="text-md font-medium text-blue-800 mt-3">{weatherMessage}</p>
+    </div>
+  );
 }
-
-export default WeatherCard;

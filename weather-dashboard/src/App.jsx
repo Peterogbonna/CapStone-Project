@@ -4,16 +4,16 @@ import WeatherCard from "./components/WeatherCard";
 function WeatherApp() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
-  const [loading, setLoading] = useState(false); // 👈 new
-  const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
+  const [loading, setLoading] = useState(false);
+  const API_KEY = "e9e419de860c750c1cf171ddf7b98ab9";
 
   const fetchWeather = async () => {
     if (!city) return;
-    setLoading(true); // 👈 start loading
+    setLoading(true);
 
     try {
       const res = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=Lagos,Edo,Abuja&appid=e9e419de860c750c1cf171ddf7b98ab9&units=metric`
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=e9e419de860c750c1cf171ddf7b98ab9&units=metric`
       );
       const data = await res.json();
 
@@ -26,10 +26,11 @@ function WeatherApp() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false); // 👈 stop loading
+      setLoading(false);
     }
   };
 
+  // ✅ make sure this return is inside the function
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-sky-300 via-blue-400 to-indigo-500">
       <div className="bg-white/20 backdrop-blur-lg rounded-2xl shadow-xl p-6 w-96 text-white">
